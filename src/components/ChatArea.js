@@ -9,7 +9,7 @@ import {
 } from "@chatscope/chat-ui-kit-react";
 
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-const API_KEY = "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";
+const API_KEY = "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";
 
 const ChatArea = () => {
 	const [messages, setChatMessages] = useState([
@@ -70,7 +70,7 @@ const ChatArea = () => {
 			})
 			.then((data) => {
 				console.log(data);
-				console.log(data.choices[0].message.content);
+				console.log(data ?.choices[0] ?.message ?.content);
 				setChatMessages([
 					...chatmessage,
 					{
