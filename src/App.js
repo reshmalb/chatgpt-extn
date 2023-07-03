@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ChatArea from './components/ChatArea';
 import ChatButton from './components/ChatButton';
+import './App.css'
 
 
 const App = () => {
@@ -12,30 +13,7 @@ const App = () => {
     setIsClicked(!isClicked);
   };
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setPosition({ x: e.clientX, y: e.clientY });
-  };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-
-    // Get the maximum position values based on the screen dimensions
-    const maxWidth = window.innerWidth -500; // Adjust as needed
-    const maxHeight = window.innerHeight - 500; // Adjust as needed
-
-    // Calculate the new position within the screen bounds
-    let newX = position.x + e.movementX;
-    let newY = position.y + e.movementY;
-    newX = Math.max(0, Math.min(newX, maxWidth));
-    newY = Math.max(0, Math.min(newY, maxHeight));
-
-    setPosition({ x: newX, y: newY });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
 
   return (
     <div
@@ -47,9 +25,7 @@ const App = () => {
         zIndex: '999',
         cursor: isDragging ? 'grabbing' : 'grab',
       }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
+   
     >
       <ChatButton onClick={handleChatButton} buttonStatus={isClicked} />
       {isClicked && <ChatArea />}
