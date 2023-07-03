@@ -21,8 +21,8 @@ const App = () => {
     if (!isDragging) return;
 
     // Get the maximum position values based on the screen dimensions
-    const maxWidth = window.innerWidth - 200; // Adjust as needed
-    const maxHeight = window.innerHeight - 200; // Adjust as needed
+    const maxWidth = window.innerWidth -500; // Adjust as needed
+    const maxHeight = window.innerHeight - 500; // Adjust as needed
 
     // Calculate the new position within the screen bounds
     let newX = position.x + e.movementX;
