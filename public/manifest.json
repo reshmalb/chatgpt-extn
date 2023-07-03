@@ -7,10 +7,21 @@
     "default_popup": "index.html",
     "default_title" :"Open"
   },
-  "permission": [
+  "permissions": [
     "scripting",
     "https://api.openai.com/*"
-  ]
+  ],
+  "host_permissions":[
+    "https://*youtube.com/*"
+  ],
+  "icons":{
+    "128":"assets/ai-icon128.jpg",
+    "64":"assets/ai-icon64.jpg"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/watch*"]
+    }]
 
 }
 

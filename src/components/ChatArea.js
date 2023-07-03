@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {v4 as uuidv4} from 'uuid'
 import {
 	MainContainer,
 	ChatContainer,
@@ -7,79 +8,39 @@ import {
 	TypingIndicator,
 	Message,
 } from "@chatscope/chat-ui-kit-react";
+import { processChatApi} from '../redux/action/DataActions'
+import {isChatLoading,isFetchError} from '../redux/slice/ChatMessagesSlice'
 
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-const API_KEY = "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";
+import { useDispatch,useSelector } from "react-redux";
 
 const ChatArea = () => {
-	const [messages, setChatMessages] = useState([
-		{
-			message: "Hello, Ask me anything...",
-			sender: "ChatGPT",
-		},
-	]);
 
-	const [isTyping, setTyping] = useState(false);
+   const storeMessages=useSelector(state=>state.chatmessages.chatlist);
+   const isLoading = useSelector(state=>state.chatmessages.isLoading) 
+   const isError =useSelector(state=>state.chatmessages.isError)
+   const dispatch=useDispatch();
+   const [messages,setChatMessages]=useState(storeMessages );
+	
+	useEffect(()=>{
+		setChatMessages(storeMessages)
+	},[storeMessages]);
+
+	// const [isTyping, setTyping] = useState(false);
+
 
 	const handleSend = async (message) => {
 		const newmessage = {
+			id:uuidv4(),
 			message: message,
 			sender: "user",
             direction:"outgoing"
 		};
-
-		const newMessages = [...messages, newmessage]; //old messages+ new chat messages
-		//update messages
-
-		setChatMessages(newMessages);
-
-		//typing indicator
-		setTyping(true);
-
-		// manage messages with chatgpt
-		await messageToChatGpt(newMessages);
-	};
-
-	async function messageToChatGpt(chatmessage) {
-		let apiMessage = chatmessage.map((messageObject) => {
-			let role = "";
-
-			if (messageObject.sender === "ChatGPT") {
-				role = "assistant";
-			} else {
-				role = "user";
-			}
-			return { role: role, content: messageObject.message };
-		});
-
-		const apiRequestBody = {
-			model: "gpt-3.5-turbo",
-			messages: [...apiMessage],
-		};
-
-		await fetch("https://api.openai.com/v1/chat/completions", {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${API_KEY}`,
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(apiRequestBody),
-		})
-			.then((data) => {
-				return data.json();
-			})
-			.then((data) => {
-				console.log(data);
-				console.log(data ?.choices[0] ?.message ?.content);
-				setChatMessages([
-					...chatmessage,
-					{
-						message: data.choices[0].message.content,
-						sender: "ChatGPT",
-					},
-				]);
-				setTyping(false);
-			});
+	 setChatMessages([...storeMessages,newmessage])
+	 const newMessages = [ newmessage]; //old messages+ new chat messages
+		  
+		//  setTyping(true)
+		dispatch(processChatApi(newMessages))
 	}
 
 	return (
@@ -89,19 +50,32 @@ const ChatArea = () => {
 				position: "relative",
 				height: "500px",
 				width: "400px",
-			}}>
-			<MainContainer>
-				<ChatContainer>
+				borderEndEndRadius:"20 px",
+				borderBottomRightRadius:"20px",
+				
+				
+			}}>				
+			<MainContainer>             
+				<ChatContainer >
 					<MessageList
-                    scrollBehavior="smooth"
+					scrollBehavior="smooth"
 						typingIndicator={
-							isTyping ? (
+							isLoading ? (
 								<TypingIndicator content="ChatGPT is typing..." />
 							) : null
 						}>
-						{messages.map((message, i) => {
-							return <Message key={i} model={message} />;
+						{messages.map((message) => {
+							return <Message key={message.id} model={message} style={{color:"green"}} />;
 						})}
+
+						{isError && (<div
+						 style={{borderColor:"crimson",
+						  background: "rgba(247,247,248,var(--tw-bg-opacity))"}}>
+							<p style={{color:"darkred"}}> An error occurred.
+							 Either the engine you requested does not exist or
+							  there was another issue processing your request.
+							   If this issue persists please contact
+							    us through our help center at help.openai.com.</p></div>)}
 					</MessageList>
 					<MessageInput placeholder="Type  message here" onSend={handleSend} />
 				</ChatContainer>
