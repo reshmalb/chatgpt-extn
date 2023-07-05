@@ -1,6 +1,6 @@
 import { MessageAction } from "../slice/ChatMessagesSlice";
 import { v4 as uuidv4 } from "uuid";
-const API_KEY = "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";
+const API_KEY = "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";
 
 export const processChatApi = (chatmessage) => {
 	return async (dispatch) => {

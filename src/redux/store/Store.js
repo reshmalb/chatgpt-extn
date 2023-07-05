@@ -6,8 +6,7 @@ import chatButtonReducer from '../slice/ChatButtonSlice';
 
 const store = configureStore({
     reducer:{
-        chatmessages : chatMessageReducer,
-        chatbuttonstatus: chatButtonReducer
+        chatmessages : chatMessageReducer
 
     }
 })

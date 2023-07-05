@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {v4 as uuidv4} from 'uuid'
+import usericon from "../asset/DefaultProfile .jpg"
+import icon from "../asset/ai-icon.png";
+
 import {
 	MainContainer,
 	ChatContainer,
@@ -7,9 +10,13 @@ import {
 	MessageInput,
 	TypingIndicator,
 	Message,
+	Avatar,
+	ConversationHeader,
+	Button,
+	
 } from "@chatscope/chat-ui-kit-react";
 import { processChatApi} from '../redux/action/DataActions'
-import {isChatLoading,isFetchError} from '../redux/slice/ChatMessagesSlice'
+import {MessageAction, isChatLoading,isFetchError} from '../redux/slice/ChatMessagesSlice'
 
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import { useDispatch,useSelector } from "react-redux";
@@ -26,7 +33,6 @@ const ChatArea = () => {
 		setChatMessages(storeMessages)
 	},[storeMessages]);
 
-	// const [isTyping, setTyping] = useState(false);
 
 
 	const handleSend = async (message) => {
@@ -37,10 +43,13 @@ const ChatArea = () => {
             direction:"outgoing"
 		};
 	 setChatMessages([...storeMessages,newmessage])
-	 const newMessages = [ newmessage]; //old messages+ new chat messages
-		  
-		//  setTyping(true)
+	     const newMessages = [ newmessage];		  
 		dispatch(processChatApi(newMessages))
+	}
+	const handleChatHistory=()=>{
+		dispatch(MessageAction.clearChatHistory());
+		setChatMessages(storeMessages)
+
 	}
 
 	return (
@@ -49,14 +58,16 @@ const ChatArea = () => {
 			style={{
 				position: "relative",
 				height: "500px",
-				width: "400px",
+				maxWidth: "400px",
 				borderEndEndRadius:"20 px",
 				borderBottomRightRadius:"20px",
 				
 				
 			}}>				
-			<MainContainer>             
+			<MainContainer>   
+		      
 				<ChatContainer >
+				
 					<MessageList
 					scrollBehavior="smooth"
 						typingIndicator={
@@ -64,8 +75,24 @@ const ChatArea = () => {
 								<TypingIndicator content="ChatGPT is typing..." />
 							) : null
 						}>
+				     <Button labelPosition="right" style={{border:"1px solid green",
+				          fontSize:".5rem",position:"fixed",
+						  justifyContent:"right",
+						  marginBottom:"2px",
+						  marginTop:'10px',
+						  marginLeft: "325px",
+						  color:"green"}}
+						   onClick={handleChatHistory}>Clear Chat</Button>    
+          
+
 						{messages.map((message) => {
-							return <Message key={message.id} model={message} style={{color:"green"}} />;
+							return(
+							 <Message key={message.id} 
+							model={message} style={{color:"green"}} >		
+						{message.sender === "ChatGPT" ? (<Avatar src={icon} size="sm"
+				      style={{width:"10px",height:"10px",borderRadius:"50%"}} name="ChatGPT" />):null}
+						</Message>)
+							
 						})}
 
 						{isError && (<div

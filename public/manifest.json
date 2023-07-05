@@ -1,28 +1,14 @@
 {
-  "manifest_version": 3,
-  "name": "Chrome Extension",
-    "description": "React Chrome Extesnion",
-  "version": "1.0.0",
-  "action": {
-    "default_popup": "index.html",
-    "default_title" :"Open"
-  },
-  "permissions": [
-    "scripting",
-    "https://api.openai.com/*"
-  ],
-  "host_permissions":[
-    "https://*.youtube.com/*"
-  ],
-  "icons":{
-    "128":"assets/ai-icon128.jpg",
-    "64":"assets/ai-icon64.jpg"
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://*.youtube.com/*"],
-      "js":["ContentScripts.js"]
-    }]
-
-}
-
+    "manifest_version": 3,
+    "name": "Chrome Extension",
+      "description": "React Chrome Extesnion",
+    "version": "1.0.0",
+    
+    "action": {
+      "default_popup": "index.html"     
+        }
+       
+   
+   
+  }
+  

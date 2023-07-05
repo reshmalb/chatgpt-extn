@@ -6,6 +6,8 @@ const LOCAL_KEY=uuidv4();
 
 
 const persistedChatList = localStorage.getItem('My-Chat');
+const activeStatus=localStorage.getItem('My-Status')
+const activatedStatus= activeStatus ? JSON.parse(activeStatus):null;
 const INITIAL_STATE = {
   chatlist: persistedChatList ? JSON.parse(persistedChatList) : [{ 
 	id: uuidv4(),
@@ -13,7 +15,7 @@ const INITIAL_STATE = {
 	 sender: "ChatGPT" }],
      isLoading: false,
      isError: false,
-	 isActivated:false,
+	 isActivated: activatedStatus === null ? false: activatedStatus
 };
 
 // const INITIAL_STATE={
@@ -43,9 +45,20 @@ const ChatMessageSlice = createSlice({
 			state.isLoading=false;
 			state.isError=true;
 		},
-		activateChatButton(state,action){
-			state.isActivated = ! state.isActivated;
-			}
+	    activateChatButton(state,action){
+			state.isActivated = ! state.isActivated;			
+			localStorage.setItem('My-Status',JSON.stringify(state.isActivated))
+
+
+			
+		},
+		clearChatHistory(state,action){			
+				localStorage.removeItem('My-Chat');
+				state.chatlist=INITIAL_STATE.chatlist;
+				state.isActivated=false;
+		
+		}
+		
 
 	}
 	

@@ -1,34 +1,29 @@
 import React, { useState } from 'react';
-import ChatArea from './components/ChatArea';
 import ChatButton from './components/ChatButton';
+import ChatArea from './components/ChatArea';
 import './App.css'
-
+import { useDispatch, useSelector } from 'react-redux';
+import { MessageAction } from './redux/slice/ChatMessagesSlice';
 
 const App = () => {
-  const [isClicked, setIsClicked] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleChatButton = () => {
-    setIsClicked(!isClicked);
-  };
-
-
-
-  return (
-    <div
-      className="App"
-      style={{
-        position: 'fixed',
-        top: position.y,
-        left: position.x,
-        zIndex: '999',
-        cursor: isDragging ? 'grabbing' : 'grab',
-      }}
+  const activate=useSelector((state)=>state.chatmessages.isActivated);
+	const [isClicked, setIsClicked] = useState(activate);
+  const dispatch=useDispatch();
    
-    >
-      <ChatButton onClick={handleChatButton} buttonStatus={isClicked} />
-      {isClicked && <ChatArea />}
+	const handleChatButton = () => {
+	  dispatch(MessageAction.activateChatButton())    
+    setIsClicked(activate);
+
+ 
+	};
+ 
+
+  
+  
+  return (
+    <div className="App"  >   
+    <ChatButton onClick={handleChatButton} buttonStatus={isClicked} />
+    {isClicked && <ChatArea />}    
     </div>
   );
 };
